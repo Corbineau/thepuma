@@ -8,12 +8,10 @@ function NoMatch() {
       <Row>
         <Col size="md-12">
           <Jumbotron>
-            <h1>404 Page Not Found</h1>
-            <h1>
-              <span role="img" aria-label="Face With Rolling Eyes Emoji">
-                🙄
-              </span>
-            </h1>
+            <h1>You let the rope slacken.</h1>
+            <p>
+              And now have been eaten by a puma. Sorry. Try another page.
+            </p>
           </Jumbotron>
         </Col>
       </Row>

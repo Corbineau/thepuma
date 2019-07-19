@@ -6,6 +6,12 @@ function Nav() {
       <a className="navbar-brand" href="/">
         The Puma
       </a>
+      <a className="navbar-brand" href="/">
+        Search
+      </a>
+      <a className="navbar-brand" href="/saved">
+        Saved Books
+      </a>
     </nav>
   );
 }
