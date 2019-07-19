@@ -5,7 +5,7 @@ import API from "../utils/API";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
-import { Input, TextArea, FormBtn } from "../components/Form";
+import { Input, FormBtn } from "../components/Form";
 
 class Books extends Component {
   state = {
@@ -38,18 +38,8 @@ class Books extends Component {
     });
   };
 
-  handleFormSubmit = event => {
-    event.preventDefault();
-    if (this.state.title && this.state.author) {
-      API.saveBook({
-        title: this.state.title,
-        author: this.state.author,
-        synopsis: this.state.synopsis
-      })
-        .then(res => this.loadBooks())
-        .catch(err => console.log(err));
-    }
-  };
+
+//ToDo: change del button to save button in this render. 
 
   render() {
     return (
@@ -60,7 +50,7 @@ class Books extends Component {
           </Jumbotron>
         </Row>
         <Row>
-          <Col size="md-6">
+          <Col size="md-12">
             <form>
               <Input
                 value={this.state.search}
@@ -73,10 +63,12 @@ class Books extends Component {
               </FormBtn>
             </form>
           </Col>
-          <Col size="md-6 sm-12">
-            {this.state.books.length ? (
+          </Row>
+          <Row>
+          <Col size="md-12 sm-12">
+            {this.state.bookResults.length ? (
               <List>
-                {this.state.books.map(book => (
+                {this.state.bookResults.map(book => (
                   <ListItem key={book._id}>
                     <Link to={"/books/" + book._id}>
                       <strong>
