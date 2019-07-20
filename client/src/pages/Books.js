@@ -1,14 +1,16 @@
 import React, { Component } from "react";
-import DeleteBtn from "../components/DeleteBtn";
+// import SaveBtn from "../components/SaveBtn";
+import Result from "../components/Result";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
 import { Input, FormBtn } from "../components/Form";
 
 class Books extends Component {
   state = {
+    isSaved: false,
     bookResults: [],
     search: "",
   };
@@ -25,8 +27,19 @@ class Books extends Component {
       .catch(err => console.log(err));
   };
 
-  deleteBook = id => {
-    API.deleteBook(id)
+  searchBook = query => {
+    API.searchBooks(query)
+    .then(res => {
+      for(let i = 0; i < res.length; i++){
+      this.state.bookResults.push(res[i])}
+      console.log(this.state.bookResults);
+      }
+    )
+  .catch(err => console.log(err));
+};
+
+  saveBook = id => {
+    API.saveBook(id)
       .then(res => this.loadBooks())
       .catch(err => console.log(err));
   };
@@ -46,7 +59,8 @@ class Books extends Component {
       <Container fluid>
         <Row>
           <Jumbotron>
-            Imagine two men holding a captured puma on a rope. If they want to approach each other, the puma will attack, because the rope will slacken; only if they both pull simultaneously on the rope is the puma equidistant from the two of them. that is why it is so hard for him who reads and him who writes to reach each other: between them lies a mutual thought captured on ropes that they pull in opposite directions. If we were now to ask that puma--in other words, that thought--how it perceived these two men, it might answer that at the ends of the rope those to be eaten are holding someone they cannot eat...
+            <em>Imagine two men holding a captured puma on a rope. If they want to approach each other, the puma will attack, because the rope will slacken; only if they both pull simultaneously on the rope is the puma equidistant from the two of them. that is why it is so hard for him who reads and him who writes to reach each other: between them lies a mutual thought captured on ropes that they pull in opposite directions. If we were now to ask that puma--in other words, that thought--how it perceived these two men, it might answer that at the ends of the rope those to be eaten are holding someone they cannot eat...
+            </em>
           </Jumbotron>
         </Row>
         <Row>
@@ -58,7 +72,7 @@ class Books extends Component {
                 name="search"
                 placeholder="search for a book"
               />
-              <FormBtn>
+              <FormBtn onClick={this.searchBook}>
                 Search
               </FormBtn>
             </form>
@@ -70,12 +84,7 @@ class Books extends Component {
               <List>
                 {this.state.bookResults.map(book => (
                   <ListItem key={book._id}>
-                    <Link to={"/books/" + book._id}>
-                      <strong>
-                        {book.title} by {book.author}
-                      </strong>
-                    </Link>
-                    <DeleteBtn onClick={() => this.deleteBook(book._id)} />
+                    <Result />
                   </ListItem>
                 ))}
               </List>

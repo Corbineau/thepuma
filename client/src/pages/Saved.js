@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
-import DeleteBtn from "../components/DeleteBtn";
 import Result from "../components/Result";
 import { List, ListItem } from "../components/List";
 import Jumbotron from "../components/Jumbotron";
@@ -9,6 +8,7 @@ import API from "../utils/API";
 
 class Saved extends Component {
   state = {
+    isSaved: true,
     books: {}
   };
 
@@ -42,12 +42,7 @@ class Saved extends Component {
               <List>
                 {this.state.books.map(book => (
                   <ListItem key={book._id}>
-                    <Link to={"/books/" + book._id}>
-                      <strong>
-                        {book.title} by {book.author}
-                      </strong>
-                    </Link>
-                    <DeleteBtn onClick={() => this.deleteBook(book._id)} />
+                    <Result />
                   </ListItem>
                 ))}
               </List>
