@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const controller = require("../../controllers/controller");
+// const API = require("../../client/src/utils/API");
 
 // Matches with "/api/books"
 router.route("/")
@@ -12,5 +13,9 @@ router
   .get(controller.findById)
 //   .put(controller.update)
   .delete(controller.remove);
+
+  router
+  .route("/?search=:query")
+  .get();
 
 module.exports = router;

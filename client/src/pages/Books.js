@@ -15,9 +15,9 @@ class Books extends Component {
     search: "",
   };
 
-  componentDidMount() {
-    this.loadBooks();
-  }
+  // componentDidMount() {
+  //   this.loadBooks();
+  // }
 
   loadBooks = () => {
     API.getBooks()
@@ -27,7 +27,8 @@ class Books extends Component {
       .catch(err => console.log(err));
   };
 
-  searchBook = query => {
+  searchBook = () => {
+    let query = this.state.search;
     API.searchBooks(query)
     .then(res => {
       for(let i = 0; i < res.length; i++){
@@ -38,6 +39,7 @@ class Books extends Component {
   .catch(err => console.log(err));
 };
 
+//ignore this for now
   saveBook = id => {
     API.saveBook(id)
       .then(res => this.loadBooks())
