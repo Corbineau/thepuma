@@ -5,7 +5,7 @@ import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 // import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
-import { List, ListItem } from "../components/List";
+import { List } from "../components/List";
 import { Input, FormBtn } from "../components/Form";
 
 class Books extends Component {
@@ -19,38 +19,54 @@ class Books extends Component {
   //   this.loadBooks();
   // }
 
-  loadBooks = () => {
-    API.getBooks()
-      .then(res =>
-        this.setState({ books: res.data, search: ""})
-      )
-      .catch(err => console.log(err));
-  };
+  // loadBooks = () => {
+  //   API.getBooks()
+  //     .then(res =>
+  //       this.setState({ books: res.data, search: ""})
+  //     )
+  //     .catch(err => console.log(err));
+  // };
 
   searchBook = () => {
-    let query = this.state.search;
-    API.searchBooks(query)
+    console.log(this.state.search);
+    API.searchBooks(this.state.search)
     .then(res => {
-      for(let i = 0; i < res.length; i++){
-      this.state.bookResults.push(res[i])}
-      console.log(this.state.bookResults);
+      this.setState({
+        bookResults: res.data
+      })
       }
     )
-  .catch(err => console.log(err));
-};
+  .catch(() => {
+    this.setState({
+      books: [],
+  })
+});
+}
 
-//ignore this for now
-  saveBook = id => {
-    API.saveBook(id)
-      .then(res => this.loadBooks())
-      .catch(err => console.log(err));
-  };
+handleBookSave = id => {
+  const book = this.state.books.find(book => book.id === id);
+
+  API.saveBook({
+    googleId: book.id,
+    title: book.volumeInfo.title,
+    subtitle: book.volumeInfo.subtitle,
+    link: book.volumeInfo.infoLink,
+    authors: book.volumeInfo.authors,
+    description: book.volumeInfo.description,
+    image: book.volumeInfo.imageLinks.thumbnail
+  }).then(() => this.getBooks());
+};
 
   handleInputChange = event => {
     const { name, value } = event.target;
     this.setState({
       [name]: value
     });
+  };
+
+  handleFormSubmit = event => {
+    event.preventDefault();
+    this.searchBook();
   };
 
 
@@ -74,7 +90,9 @@ class Books extends Component {
                 name="search"
                 placeholder="search for a book"
               />
-              <FormBtn onClick={this.searchBook}>
+              <FormBtn 
+                onClick={this.handleFormSubmit}
+                search={this.state.search}>
                 Search
               </FormBtn>
             </form>
@@ -85,9 +103,22 @@ class Books extends Component {
             {this.state.bookResults.length ? (
               <List>
                 {this.state.bookResults.map(book => (
-                  <ListItem key={book._id}>
-                    <Result />
-                  </ListItem>
+                  <Result
+                  key={book.id}
+                  title={book.volumeInfo.title}
+                  subtitle={book.volumeInfo.subtitle}
+                  link={book.volumeInfo.infoLink}
+                  authors={book.volumeInfo.authors.join(", ")}
+                  description={book.volumeInfo.description}
+                  image={book.volumeInfo.imageLinks.thumbnail}
+                  Button={() => (
+                    <button
+                      onClick={() => this.handleBookSave(book.id)}
+                      className="btn btn-primary ml-2"
+                    >
+                      Save
+                    </button>
+                  )} />
                 ))}
               </List>
             ) : (

@@ -1,38 +1,41 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import SaveBtn from "../SaveBtn";
-import DeleteBtn from "../DeleteBtn";
+import { ListItem } from "../List";
 import "./style.css";
 import { Col, Row } from "../Grid";
 
 
-// This file exports each result from the Saved items in the DB. This is what gets rendered every time we map a result. So... should actually make that happen, huh?
-// There's actually 2 kinds of results we care about-- saved ones, and searched ones. So we'll need a ternary for the button in the corner that looks something like (saved ? <DeleteBtn>Delete</DeleteBtn> : <SavedButton>Save</SavedButton> ) 
+// Ok, so we can just do the button as part of the component on each rendered page, and have it call whatever there so... ok I guess?
 
-export default function Result({ children }) {
+export default function Result({ title, subtitle, authors, link, description, image, Button }) {
   return (
-    <div className="list-overflow-container result">
-      <Row>
-        <Col size="md-9">
-          <strong>{children.book.title}</strong>
+    <ListItem>
+      <Row className="flex-wrap-reverse">
+        <Col size="md-8">
+          <h3 className="font-italic">{title}</h3>
+          {subtitle && <h5 className="font-italic">{subtitle}</h5>}
         </Col>
-        <Col size="md-3">
-          <Link to={children.book.link}>
-            <button>
-              view
-        </button>
-          </Link>
-          {this.state.isSaved ? <SaveBtn onClick={() => this.saveBook(children.book)} /> : <DeleteBtn onClick={() => this.deleteBook(children.book._id)} />}
+        <Col size="md-4">
+          <div className="btn-container">
+            <a className="btn btn-light" target="_blank" rel="noopener noreferrer" href={link}>
+              View
+            </a>
+            <Button />
+          </div>
         </Col>
       </Row>
       <Row>
-        By: {children.book.authors}
+        <Col size="md-6">
+          <p className="font-italic small">Written by {authors}</p>
+        </Col>
       </Row>
       <Row>
-        <img src={children.book.image} alt="Thumbnail of the book"/>
-        description: {children.book.synopsis}
+        <Col size="12 sm-4 md-2">
+          <img className="img-thumbnail img-fluid w-100" src={image} alt={title} />
+        </Col>
+        <Col size="12 sm-8 md-10">
+          <p>{description}</p>
+        </Col>
       </Row>
-
-    </div>
+    </ListItem>
   );
 }
